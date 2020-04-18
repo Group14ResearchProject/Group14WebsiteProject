@@ -1,0 +1,227 @@
+CREATE TABLE user_registry
+(user_id INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(32) NOT NULL,
+surname VARCHAR(32) NOT NULL,
+user_name VARCHAR(64) NOT NULL,
+password VARCHAR(255) NOT NULL,
+mob_number BIGINT NOT NULL,
+emailaddress VARCHAR(100) NOT NULL,
+address VARCHAR(128) NOT NULL,
+country VARCHAR(64) NOT NULL,
+county VARCHAR(64) NOT NULL,
+postcode VARCHAR(8) NOT NULL,
+admin BOOLEAN NOT NULL);
+
+CREATE TABLE category
+(category_id INT PRIMARY KEY,
+category VARCHAR(20) NOT NULL);
+
+CREATE TABLE product
+(product_id INT PRIMARY KEY,
+product_name VARCHAR(50) NOT NULL,
+p_description VARCHAR(100),
+p_size VARCHAR(10),
+colour VARCHAR(16),
+prod_price DOUBLE NOT NULL,
+category_id INT,
+p_stockid INT NOT NULL,
+image VARCHAR(128),
+CONSTRAINT fk_product_category_id FOREIGN KEY (category_id) REFERENCES category (category_id));
+
+CREATE TABLE product_stock
+(p_stockid INT PRIMARY KEY,
+product_id INT,
+s_quantity BIGINT NOT NULL,
+CONSTRAINT fk_product_stock_product_id FOREIGN KEY (product_id) REFERENCES product (product_id));
+
+CREATE TABLE user_order
+(order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+user_id INT,
+order_sum VARCHAR(2000) NOT NULL,
+order_date VARCHAR(50) NOT NULL,
+shippingaddress VARCHAR(255) NOT NULL,
+order_status VARCHAR(10) NOT NULL,
+CONSTRAINT fk_user_order_user_id FOREIGN KEY (user_id) REFERENCES user_registry (user_id));
+
+CREATE TABLE purchases
+(purchase_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+order_id BIGINT,
+product_id INT,
+quantity BIGINT NOT NULL,
+CONSTRAINT fk_purchases_order_id FOREIGN KEY (order_id) REFERENCES user_order (order_id),
+CONSTRAINT fk_purchases_product_id FOREIGN KEY (product_id) REFERENCES product (product_id));
+
+CREATE TABLE payment
+(payment_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+order_id BIGINT,
+total_cost BIGINT NOT NULL,
+cardnumber VARCHAR(16) NOT NULL,
+expirydate VARCHAR(7) NOT NULL,
+cvc VARCHAR(3) NOT NULL,
+payment_date VARCHAR(50) NOT NULL,
+CONSTRAINT fk_payment_order_id FOREIGN KEY (order_id) REFERENCES user_order (order_id));
+
+CREATE TABLE product_review
+(review_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+product_id INT,
+rating TINYINT NOT NULL,
+title VARCHAR(20) NOT NULL,
+user_comment VARCHAR(150) NOT NULL,
+CONSTRAINT fk_product_review_product_id FOREIGN KEY (product_id) REFERENCES product (product_id));
+
+CREATE TABLE contact
+(contact_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+firstname VARCHAR(255) NOT NULL,
+surname VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL,
+telNumber VARCHAR(64) NOT NULL,
+Message VARCHAR(2500) NOT NULL,
+DateofMessage VARCHAR(50) NOT NULL);
+
+INSERT INTO contact VALUES ('1', 'Jake', 'Fake', 'Jakefake@gmail.com', '07123456789', 'Hi, I was wondering how long until your next website sale starts, I really needs some new sun glasses for the summer.', '28/03/2020');
+INSERT INTO contact VALUES ('2', 'Lucy', 'Jane', 'LJane@ymail.com', '07546789512', 'Just wanted to contact to let you know that your products are great and to keep up the good job and I love the free shipping', '29/03/2020');
+
+INSERT INTO category VALUES ('1', 'Socks');
+INSERT INTO category VALUES ('2', 'Watches');
+INSERT INTO category VALUES ('3', 'Lighters');
+INSERT INTO category VALUES ('4', 'Ties');
+INSERT INTO category VALUES ('5', 'Cufflinks');
+INSERT INTO category VALUES ('6', 'Glasses');
+INSERT INTO category VALUES ('7', 'Sunglasses');
+
+INSERT INTO product VALUES ('10', 'Socks', 'Classic socks one size fits all socks for man', '', 'Black', '6.99', '1', '1', 'product-images/classicsocks.jpg');
+INSERT INTO product VALUES ('11', 'Banana Socks', '2 pack banana socks', 'UK 9-11', 'Black/Yellow', '10.99', '1', '2', 'product-images/bananasocks.jpg');
+INSERT INTO product VALUES ('12', 'Ralph Lauren Socks', 'Grey Polo Ralph Lauren Socks with red logo', '', '', '32.00', '1', '3', 'product-images/polosocks.jpg');
+INSERT INTO product VALUES ('13', 'Socks in blue', '3 pack sports sock in blue', '', 'Blue', '21.99', '1', '4', 'product-images/bluesocks.jpg');
+INSERT INTO product VALUES ('14', 'Socks with lime stripes', 'Socks with lime stripes', ' ', 'Black/Lime', '9.99', '1', '5', 'product-images/limesocks.jpg');
+INSERT INTO product VALUES ('15', 'Dirty Boys Watch', 'Dirty Boys Grey watch with brown leather wrist strap', '38mm', 'Grey/Brown', '500.00', '2', '6', 'product-images/dirtyboywatch.jpg');
+INSERT INTO product VALUES ('16', 'Watch - Heritage', 'Longines Conquest Heritage', '42mm', 'Grey', '40.00', '2', '7', 'product-images/heritagewatch.jpg');
+INSERT INTO product VALUES ('17', 'Watch - Seiko', 'Seiko 5 Sports X', '41mm', 'Grey', '1395.00', '2', '8', 'product-images/seikowatch.jpg');
+INSERT INTO product VALUES ('18', 'Watch - Omega', 'Omega Speedmaster Moonwatch', '35mm', 'Black', '920.00', '2', '9', 'product-images/omegawatch.jpg');
+INSERT INTO product VALUES ('19', 'Watch - TAG', 'TAG Heuer Acquaracer', '41mm', 'Black', '500.00', '2', '10', 'product-images/tagwatch.jpg');
+INSERT INTO product VALUES ('20', 'Zippo', 'Classic Black Zippo', '', 'Black', '29.99', '3', '11', 'product-images/blackzippo.jpg');
+INSERT INTO product VALUES ('21', 'Zippo Metal Jacket', 'Metal Jacket', '', 'Gold', '144.20', '3', '12', 'product-images/metallighter.jpg');
+INSERT INTO product VALUES ('22', 'Tribal Zippo', 'Luxury Design Tribal', '', 'Grey', '29.99', '3', '13', 'product-images/triballighter.jpg');
+INSERT INTO product VALUES ('23', 'Zippo Flame', 'Zippo Flame', '', 'Grey/Red', '54.99', '3', '14', 'product-images/flamelighter.jpg');
+INSERT INTO product VALUES ('24', 'Zippo with Celtic Design', 'Celtic Cross Design', '', 'Grey', '99.99', '3', '15', 'product-images/celticlighter.jpg');
+INSERT INTO product VALUES ('25', 'Tie - Joules', 'Joules Tie', '', 'Yellow', '20.00', '4', '16', 'product-images/tiejoules.jpg');
+INSERT INTO product VALUES ('26', 'Tie with Navy Signature', 'Navy Signature Textured Spot Silk Tie', '', 'Blue', '18.00', '4', '17', 'product-images/bluetie.jpg');
+INSERT INTO product VALUES ('27', 'Tie with Tie Clip', 'Tie with Tie Clip', '', 'Black', '12.99', '4', '18', 'product-images/tiewithclip.jpg');
+INSERT INTO product VALUES ('28', 'Red Tie', 'Red Tie', '', 'Red', '12.00', '4', '19', 'product-images/redtie.jpg');
+INSERT INTO product VALUES ('29', 'Pink Tie', 'Pink Tie', '', 'Pink', '12.00', '4', '20', 'product-images/pinktie.jpg');
+INSERT INTO product VALUES ('30', 'Dunhill Cufflinks', 'Dunhill Cufflinks with presentation Box', '', 'Black', '20.99', '5', '21', 'product-images/simplecufflinks.jpg');
+INSERT INTO product VALUES ('31', 'Cufflinks - Simony', 'Simony Black Cufflinks', '', 'Black', '55.99', '5', '22', 'product-images/simonycufflinks.jpg');
+INSERT INTO product VALUES ('32', 'Watch Cufflinks', 'Mens Vintage Watch Cufflinks', '', 'Silver', '35.99', '5', '23', 'product-images/watchlikecufflinks.jpg');
+INSERT INTO product VALUES ('33', 'Glasses - Burberry', 'Burberry glasses with coloured sides', '', 'Black', '229.99', '6', '24', 'product-images/burberryglasses.jpg');
+INSERT INTO product VALUES ('34', 'Glasses - Saint Laurent', 'Saint Laurent', '', 'Black/Grey', '179.99', '6', '25', 'product-images/saintlaurentglasses.jpg');
+INSERT INTO product VALUES ('35', 'Glasses - Gucci', 'Gucci', '', 'Blue/Red', '15.99', '6', '26', 'product-images/gucciglasses.jpg');
+INSERT INTO product VALUES ('36', 'Glasses - BOSS', 'BOSS', '', 'Black/Brown/Wooden', '209.99', '6', '27', 'product-images/bossglasses.jpg');
+INSERT INTO product VALUES ('37', 'Hugo Boss Sunglasses', 'Simple Black Hugo Boss Sunglasses', '', 'Black', '15.99', '7', '28', 'product-images/hugobosssunglasses.jpg');
+INSERT INTO product VALUES ('38', 'Sunglasses - New Look', 'New Look retro sunglasses in tortoise', '', 'Tortoise', '5.99', '7', '29', 'product-images/newlooksunglasses.jpg');
+INSERT INTO product VALUES ('39', 'Sunglasses - Spitfire', 'Spitfire Golden Sunglasses', '', 'Golden/Black', '34.99', '7', '30', 'product-images/spitfiresunglasses.jpg');
+INSERT INTO product VALUES ('40', 'Sunglasses - Esprit', 'Esprit round sunglasses in red and black', '', 'Red/Black', '25.99', '7', '31', 'product-images/espritsunglasses.jpg');
+INSERT INTO product VALUES ('41', 'Sunglasses - River Island', 'River Island squarded sunglasses in a wooden, brown frame', '', 'Brown/Wooden', '46.99', '7', '32', 'product-images/riverislandsunglasses.jpg');
+
+INSERT INTO product_stock VALUES ('1', '10', '1000');
+INSERT INTO product_stock VALUES ('2', '11', '678');
+INSERT INTO product_stock VALUES ('3', '12', '843');
+INSERT INTO product_stock VALUES ('4', '13', '254');
+INSERT INTO product_stock VALUES ('5', '14', '150');
+INSERT INTO product_stock VALUES ('6', '15', '5');
+INSERT INTO product_stock VALUES ('7', '16', '7');
+INSERT INTO product_stock VALUES ('8', '17', '4');
+INSERT INTO product_stock VALUES ('9', '18', '8');
+INSERT INTO product_stock VALUES ('10', '19', '15');
+INSERT INTO product_stock VALUES ('11', '20', '50');
+INSERT INTO product_stock VALUES ('12', '21', '170');
+INSERT INTO product_stock VALUES ('13', '22', '200');
+INSERT INTO product_stock VALUES ('14', '23', '187');
+INSERT INTO product_stock VALUES ('15', '24', '88');
+INSERT INTO product_stock VALUES ('16', '25', '300');
+INSERT INTO product_stock VALUES ('17', '26', '234');
+INSERT INTO product_stock VALUES ('18', '27', '352');
+INSERT INTO product_stock VALUES ('19', '28', '132');
+INSERT INTO product_stock VALUES ('20', '29', '1086');
+INSERT INTO product_stock VALUES ('21', '30', '290');
+INSERT INTO product_stock VALUES ('22', '31', '89');
+INSERT INTO product_stock VALUES ('23', '32', '211');
+INSERT INTO product_stock VALUES ('24', '33', '1080');
+INSERT INTO product_stock VALUES ('25', '34', '2944');
+INSERT INTO product_stock VALUES ('26', '35', '429');
+INSERT INTO product_stock VALUES ('27', '36', '700');
+INSERT INTO product_stock VALUES ('28', '37', '364');
+INSERT INTO product_stock VALUES ('29', '38', '834');
+INSERT INTO product_stock VALUES ('30', '39', '1209');
+INSERT INTO product_stock VALUES ('31', '40', '944');
+INSERT INTO product_stock VALUES ('32', '41', '777');
+
+INSERT INTO user_registry VALUES ('1', 'Steve', 'Jobs', 'Admin', '$2y$10$dtlJoPCHh.1uTD65o5Tog.dmOkqeUZd7MzqCsLZF8htlbYr5yc8Nu', '07777777777', 'Admin@uwl.ac.uk', '1 Fake Street', 'UK', 'London', 'W5 5RF', '1');
+INSERT INTO user_registry VALUES ('2', 'Bill', 'Gates', 'BillG', '$2y$10$dtlJoPCHh.1uTD65o5Tog.dmOkqeUZd7MzqCsLZF8htlbYr5yc8Nu', '07777777777', 'BillG@student.uwl.ac.uk', '2 Fake Street', 'UK', 'London', 'W5 5RF', '0');
+INSERT INTO user_registry VALUES ('3', 'Elon', 'Musk', 'ElonM', '$2y$10$dtlJoPCHh.1uTD65o5Tog.dmOkqeUZd7MzqCsLZF8htlbYr5yc8Nu', '07777777777', 'ElonM@student.uwl.ac.uk', '3 Fake Street', 'UK', 'London', 'W5 5RF', '0');
+INSERT INTO user_registry VALUES ('4', 'Mark', 'Zuckerberg', 'MarkZ', '$2y$10$dtlJoPCHh.1uTD65o5Tog.dmOkqeUZd7MzqCsLZF8htlbYr5yc8Nu', '07777777777', 'MarkZ@student.uwl.ac.uk', '4 Fake Street', 'UK', 'London', 'W5 5RF', '0');
+INSERT INTO user_registry VALUES ('5', 'Jeff', 'Bezos', 'JeffB', '$2y$10$dtlJoPCHh.1uTD65o5Tog.dmOkqeUZd7MzqCsLZF8htlbYr5yc8Nu', '07777777777', 'JeffB@student.uwl.ac.uk', '5 Fake Street', 'UK', 'London', 'W5 5RF', '0');
+
+INSERT INTO product_review VALUES ('1', '10', '5', 'Great set of socks', 'They fit really well and lasted a long time');
+INSERT INTO product_review VALUES ('2', '10', '4', 'Perfect for my kids', 'Bought these socks for my 11 year old, great quality, good fit');
+INSERT INTO product_review VALUES ('3', '11', '4', 'Novelty socks', 'Funny socks, bought for my man, who loves them');
+INSERT INTO product_review VALUES ('4', '11', '5', 'Good socks', 'Good quality, happy with product');
+INSERT INTO product_review VALUES ('5', '12', '4', 'Quality socks', 'Does not disapoint, always Ralph Lauren for my family socks');
+INSERT INTO product_review VALUES ('6', '12', '5', 'What can I say', 'What can I say, Ralph Lauren are a brand worthy of my cash');
+INSERT INTO product_review VALUES ('7', '13', '4', 'Sporty', 'Needed socks for morning run, great quality');
+INSERT INTO product_review VALUES ('8', '13', '4', 'Thick socks', 'Good for cycling');
+INSERT INTO product_review VALUES ('9', '14', '4', 'School Socks', 'My son loves these socks');
+INSERT INTO product_review VALUES ('10', '14', '4', 'Good socks', 'Happy with these socks, nice and thick');
+INSERT INTO product_review VALUES ('11', '15', '5', 'Happy', 'Bought this watch for my husbands 50th, he is very happy');
+INSERT INTO product_review VALUES ('12', '15', '5', 'Great Timing', 'Happy with the watch, will buy again from Dirty Boys');
+INSERT INTO product_review VALUES ('13', '16', '5', 'Quality', 'Best watch I have ever bought');
+INSERT INTO product_review VALUES ('14', '16', '5', 'Great price', 'Budget price tag for premium product');
+INSERT INTO product_review VALUES ('15', '17', '5', 'Was a Christmas present', 'Christmas presents from my two Grandsons, they love them');
+INSERT INTO product_review VALUES ('16', '17', '3', 'Retirement present', 'So happy with this watch');
+INSERT INTO product_review VALUES ('17', '18', '4', 'Happy', 'Quality watch');
+INSERT INTO product_review VALUES ('18', '18', '5', 'Good watch', 'Happy with this watch, I have a small wrist was not sure the strap would fit but the strap is adaptable to size ');
+INSERT INTO product_review VALUES ('19', '19', '4', 'Solid watch', 'Comes in a stylish box, great watch. Perfect for a birthday present');
+INSERT INTO product_review VALUES ('20', '19', '4', 'Good watch', 'Worth every penny');
+INSERT INTO product_review VALUES ('21', '20', '5', 'Great classic Zippo', 'Simple design, nice finish');
+INSERT INTO product_review VALUES ('22', '20', '4', 'Tucks away', 'Neatly tucks away into my pocket, small enough to travel with');
+INSERT INTO product_review VALUES ('23', '21', '4', 'Smart design', 'Cool design, my goth neice loves it');
+INSERT INTO product_review VALUES ('24', '21', '5', 'Happy with lighter', 'This is my first lighter as usually use matches. Very happy with the design, friends are jealous!');
+INSERT INTO product_review VALUES ('25', '22', '5', 'Neat', 'So happy with this neat little lighter, does the job');
+INSERT INTO product_review VALUES ('26', '22', '4', 'Original design', 'Does the job whilst looking good');
+INSERT INTO product_review VALUES ('27', '23', '4', 'Flaming hot', 'This lighter is top notch, will buy again');
+INSERT INTO product_review VALUES ('28', '23', '3', 'Quality lighter', 'Great present for my wife');
+INSERT INTO product_review VALUES ('29', '24', '3', 'Nice', 'Sleek design and solid');
+INSERT INTO product_review VALUES ('30', '24', '4', 'Unusual design', 'Nice design, was bought for me as a present, love it!');
+INSERT INTO product_review VALUES ('31', '25', '5', 'Great quality', 'Impressed with the super fast delivery. Tie is of a good standard');
+INSERT INTO product_review VALUES ('32', '25', '5', 'Happy with Tie', 'Silky tie, happy with the product');
+INSERT INTO product_review VALUES ('33', '26', '4', 'Silky', 'Was a nice suprise to feel how silky this tie is. Will buy again.');
+INSERT INTO product_review VALUES ('34', '26', '4', 'Tidy', 'My husband loves this tie, has a silky feel to it');
+INSERT INTO product_review VALUES ('35', '27', '4', 'Nice touch', 'Good quality tie and the tie clip is an added bonus');
+INSERT INTO product_review VALUES ('36', '27', '5', 'Grandson loves it', 'Was a birthday present, well received');
+INSERT INTO product_review VALUES ('37', '28', '4', 'Bold', 'Bold red is perfect for my meetings, great quality tie');
+INSERT INTO product_review VALUES ('38', '28', '5', 'Just what I was looking for', 'Was searching for red tie, very happy with this silky one');
+INSERT INTO product_review VALUES ('39', '29', '4', 'Love the colour', 'Love the colour, great quality, will buy again');
+INSERT INTO product_review VALUES ('40', '29', '5', 'Happy with tie', 'Delivery was fast, the tie is nice');
+INSERT INTO product_review VALUES ('41', '30', '4', 'Nice cufflinks', 'Presentation box adds style to the cufflinks. Happy with them');
+INSERT INTO product_review VALUES ('42', '30', '5', 'Present', 'Gift for my Grandad, he loves them');
+INSERT INTO product_review VALUES ('43', '31', '4', 'Stylish', 'Needed cufflinks for a new years eve bash, these came in a treat.');
+INSERT INTO product_review VALUES ('44', '31', '5', 'Solidily made cufflinks', 'These cufflinks are great, will buy again from Dirty Boys');
+INSERT INTO product_review VALUES ('45', '32', '4', 'Fab', 'Unique cufflinks, novelty gift ');
+INSERT INTO product_review VALUES ('46', '32', '5', 'Many admirations', 'Had many admirations of these cufflinks, everyone wants to know where I bought them. Sent them the link');
+INSERT INTO product_review VALUES ('47', '33', '5', 'Sits nicely on head', 'Fits my head perfectly most comfortable glasses I have ever owned');
+INSERT INTO product_review VALUES ('48', '33', '5', 'Super stylish', 'Many compliments I have recieved for these glasses, very happy');
+INSERT INTO product_review VALUES ('49', '34', '5', 'Happy', 'Been looking for these glasses for a while, they are perfect for my face');
+INSERT INTO product_review VALUES ('50', '34', '4', 'Suits you Sir', 'Well fitting these glasses are');
+INSERT INTO product_review VALUES ('51', '35', '4', 'Unique glasses', 'Bought these to go with a fab new dress, comfortable fit');
+INSERT INTO product_review VALUES ('52', '35', '3', 'Nice', 'Sturdy glasses');
+INSERT INTO product_review VALUES ('53', '36', '4', 'Boss man', 'Love these glasses, the wooden sides are smooth');
+INSERT INTO product_review VALUES ('54', '36', '5', 'Fabulous', 'Never disapointed with the brand');
+INSERT INTO product_review VALUES ('55', '37', '5', 'Bold glasses', 'These glasses really helped me stand out in a crowd');
+INSERT INTO product_review VALUES ('56', '37', '4', 'Love these glasses', 'Would definitely buy again if in the future I need to');
+INSERT INTO product_review VALUES ('57', '38', '4', 'Simple affordable glasses', 'Great price for a great set of glasses');
+INSERT INTO product_review VALUES ('58', '38', '5', 'Dressy', 'Bought these for the beach, great sunglasses');
+INSERT INTO product_review VALUES ('59', '39', '5', 'Holiday!', 'These were great for my summer holiday');
+INSERT INTO product_review VALUES ('60', '39', '5', 'Hipster', 'My Dad looks great in these glasses');
+INSERT INTO product_review VALUES ('61', '40', '5', 'Old school', 'Been on the lookout for some old school sunglasses, happy I found your site');
+INSERT INTO product_review VALUES ('62', '40', '5', 'Love the tint', 'The colour and the tint of these sunglasses are just what I was looking for, would buy again');
+INSERT INTO product_review VALUES ('63', '41', '5', 'Wooden effect', 'Absolutely love the wooden effect of these sunglasses');
+INSERT INTO product_review VALUES ('64', '41', '4',  'Great sunglasses', 'Will buy again from this website, fast delivery');
